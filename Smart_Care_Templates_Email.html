@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Care — Templates de E-mail Automático</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0f19;--bg-card:#1a2332;--border:#1e293b;--accent-cyan:#06b6d4;--accent-green:#10b981;--accent-blue:#3b82f6;--accent-red:#ef4444;--accent-amber:#f59e0b;--accent-purple:#8b5cf6;--accent-orange:#f97316;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--text-dim:#475569}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text-primary);min-height:100vh;padding:40px 20px 60px}
+.container{max-width:720px;margin:0 auto}
+
+.header{text-align:center;margin-bottom:40px}
+.header-icon{font-size:48px;margin-bottom:12px}
+.header h1{font-size:28px;font-weight:800;margin-bottom:8px}
+.header p{font-size:14px;color:var(--text-secondary);max-width:520px;margin:0 auto;line-height:1.6}
+
+.section-title{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin:36px 0 16px;display:flex;align-items:center;gap:10px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* EMAIL TABS */
+.email-tabs{display:flex;gap:6px;margin-bottom:24px;overflow-x:auto;padding-bottom:4px}
+.email-tab{padding:8px 16px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s}
+.email-tab:hover{border-color:var(--text-muted);color:var(--text-secondary)}
+.email-tab.active{border-color:var(--accent-cyan);color:var(--accent-cyan);background:rgba(6,182,212,.1)}
+
+/* EMAIL CONTAINER */
+.email-container{display:none}
+.email-container.active{display:block}
+
+.email-meta{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:16px;font-size:12px}
+.email-meta-row{display:flex;gap:12px;padding:4px 0}
+.email-meta-label{color:var(--text-dim);min-width:80px;font-weight:600}
+.email-meta-value{color:var(--text-secondary)}
+.email-meta-value strong{color:var(--text-primary)}
+.email-meta-trigger{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;margin-left:8px}
+
+/* EMAIL PREVIEW */
+.email-preview{background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 40px rgba(0,0,0,.3)}
+
+/* GENERIC EMAIL STYLES */
+.email-body{padding:0;color:#1e293b;font-size:14px;line-height:1.7}
+
+.email-top-bar{height:4px}
+.email-top-bar.green{background:linear-gradient(90deg,#059669,#10b981)}
+.email-top-bar.amber{background:linear-gradient(90deg,#d97706,#f59e0b)}
+.email-top-bar.red{background:linear-gradient(90deg,#dc2626,#ef4444)}
+.email-top-bar.blue{background:linear-gradient(90deg,#2563eb,#3b82f6)}
+.email-top-bar.purple{background:linear-gradient(90deg,#7c3aed,#8b5cf6)}
+.email-top-bar.cyan{background:linear-gradient(90deg,#0891b2,#06b6d4)}
+
+.email-header{padding:28px 32px 20px;text-align:center;border-bottom:1px solid #e2e8f0}
+.email-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px}
+.email-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#059669,#06b6d4);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.email-logo-brand{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#059669;letter-spacing:2px}
+.email-mfg{font-size:11px;color:#94a3b8}
+
+.email-content{padding:28px 32px}
+.email-icon-big{font-size:48px;text-align:center;margin-bottom:16px;display:block}
+.email-title{font-size:22px;font-weight:800;color:#0f172a;text-align:center;margin-bottom:8px;line-height:1.3}
+.email-subtitle{font-size:14px;color:#64748b;text-align:center;margin-bottom:24px}
+
+.email-p{margin-bottom:16px;color:#334155;font-size:14px;line-height:1.7}
+.email-p strong{color:#0f172a}
+
+/* EMAIL CARD */
+.email-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-bottom:20px}
+.email-card-title{font-size:12px;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.email-card-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:13px}
+.email-card-row:last-child{border-bottom:none}
+.email-card-row .label{color:#64748b}
+.email-card-row .value{font-weight:600;color:#0f172a}
+
+/* EMAIL TABLE */
+.email-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px}
+.email-table th{text-align:left;padding:10px 12px;background:#f1f5f9;color:#475569;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid #e2e8f0}
+.email-table td{padding:10px 12px;border-bottom:1px solid #e2e8f0;color:#334155}
+.email-table tr:last-child td{border-bottom:none}
+
+/* EMAIL ALERT BOX */
+.email-alert{padding:16px 20px;border-radius:10px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px}
+.email-alert.amber{background:#fffbeb;border:1px solid #fde68a}
+.email-alert.red{background:#fef2f2;border:1px solid #fecaca}
+.email-alert.green{background:#f0fdf4;border:1px solid #bbf7d0}
+.email-alert.blue{background:#eff6ff;border:1px solid #bfdbfe}
+.email-alert-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.email-alert-text{font-size:13px;line-height:1.6}
+.email-alert-text strong{display:block;margin-bottom:2px}
+.email-alert.amber .email-alert-text strong{color:#92400e}
+.email-alert.red .email-alert-text strong{color:#991b1b}
+.email-alert.green .email-alert-text strong{color:#166534}
+.email-alert.blue .email-alert-text strong{color:#1e40af}
+
+/* EMAIL CTA */
+.email-cta{display:block;width:100%;padding:16px;text-align:center;border-radius:10px;font-size:15px;font-weight:700;text-decoration:none;color:#ffffff;margin:24px 0}
+.email-cta.green{background:#059669}
+.email-cta.amber{background:#d97706}
+.email-cta.red{background:#dc2626}
+.email-cta.blue{background:#2563eb}
+.email-cta.purple{background:#7c3aed}
+
+/* EMAIL FOOTER */
+.email-footer{padding:20px 32px;background:#f8fafc;border-top:1px solid #e2e8f0;text-align:center}
+.email-footer p{font-size:11px;color:#94a3b8;line-height:1.6}
+.email-footer a{color:#059669;text-decoration:none}
+
+/* NPS STARS */
+.nps-row{display:flex;justify-content:center;gap:6px;margin:20px 0}
+.nps-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;border:2px solid #e2e8f0;color:#64748b;background:#fff}
+.nps-num.red{border-color:#fecaca;color:#dc2626;background:#fef2f2}
+.nps-num.amber{border-color:#fde68a;color:#d97706;background:#fffbeb}
+.nps-num.green{border-color:#bbf7d0;color:#059669;background:#f0fdf4}
+
+/* WEEKLY SECTION */
+.weekly-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px}
+.weekly-kpi-item{background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center}
+.weekly-kpi-value{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:#059669}
+.weekly-kpi-label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.animate{animation:fadeIn .5s ease both}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header animate">
+<div class="header-icon">📧</div>
+<h1>Templates de E-mail Automático</h1>
+<p>Modelos dos e-mails que o Smart Care envia automaticamente. Todos são personalizados com a marca do fabricante.</p>
+</div>
+
+<!-- TABS -->
+<div class="email-tabs animate">
+<button class="email-tab active" onclick="showEmail('manut')">🔧 Manutenção</button>
+<button class="email-tab" onclick="showEmail('garantia')">🛡️ Garantia</button>
+<button class="email-tab" onclick="showEmail('boas-vindas')">👋 Boas-vindas</button>
+<button class="email-tab" onclick="showEmail('nps')">⭐ NPS</button>
+<button class="email-tab" onclick="showEmail('semanal')">📊 Semanal</button>
+<button class="email-tab" onclick="showEmail('atrasado')">🚨 Atraso</button>
+</div>
+
+<!-- ===== EMAIL 1: MANUTENÇÃO PREVENTIVA ===== -->
+<div class="email-container active" id="email-manut">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>SUA MARCA</strong> via Smart Care &lt;noreply@suamarca.com.br&gt;</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">dr.ricardo@hospital.com.br (Engenheiro Clínico)</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>🔧 Manutenção preventiva se aproximando — 4 equipamentos</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(245,158,11,.15);color:#d97706">⏰ 30 dias antes</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar amber"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Powered by <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<span class="email-icon-big">🔧</span>
+<div class="email-title">Manutenção Preventiva se Aproximando</div>
+<div class="email-subtitle">Existem 4 equipamentos com revisão prevista nos próximos 30 dias</div>
+
+<div class="email-p">Olá, <strong>Dr. Ricardo</strong>,</div>
+<div class="email-p">Este é um lembrete automático do sistema Smart Care. Os seguintes equipamentos do <strong>Hospital Regional do Vale</strong> possuem manutenção preventiva agendada para os próximos 30 dias:</div>
+
+<table class="email-table">
+<thead><tr><th>Equipamento</th><th>Local</th><th>Data Prevista</th></tr></thead>
+<tbody>
+<tr><td><strong>Foco Cirúrgico LED</strong><br><span style="font-size:11px;color:#94a3b8">FC-LED-2025-0142</span></td><td>CC — Sala 03</td><td><strong>15/03/2026</strong></td></tr>
+<tr><td><strong>Cama Elétrica Total Fiber</strong><br><span style="font-size:11px;color:#94a3b8">CE-TFP-2025-0088</span></td><td>UTI — Leito 04</td><td><strong>18/03/2026</strong></td></tr>
+<tr><td><strong>Mesa Cirúrgica Elétrica</strong><br><span style="font-size:11px;color:#94a3b8">MC-300-2025-0021</span></td><td>CC — Sala 01</td><td><strong>22/03/2026</strong></td></tr>
+<tr><td><strong>Maca Hidráulica</strong><br><span style="font-size:11px;color:#94a3b8">MH-200-2025-0034</span></td><td>PS — Box 02</td><td><strong>25/03/2026</strong></td></tr>
+</tbody>
+</table>
+
+<div class="email-alert amber">
+<span class="email-alert-icon">💡</span>
+<div class="email-alert-text"><strong>Por que a manutenção preventiva é importante?</strong>Equipamentos com revisão em dia apresentam 73% menos falhas inesperadas e mantêm a conformidade ANVISA/ONA. A revisão preventiva preserva a vida útil e evita paradas não programadas.</div>
+</div>
+
+<div class="email-p">Nossa equipe técnica entrará em contato para agendar o melhor horário para sua equipe. Se preferir, você pode solicitar o agendamento diretamente pelo portal:</div>
+
+<a class="email-cta amber" href="#">📅 Agendar Manutenção pelo Portal</a>
+
+<div class="email-p" style="font-size:12px;color:#94a3b8">Caso já tenha agendado ou deseje reagendar, basta responder este e-mail ou acessar o portal Smart Care.</div>
+</div>
+<div class="email-footer">
+<p>Este e-mail foi enviado automaticamente pelo sistema Smart Care.<br>
+<a href="#">Acessar Portal</a> · <a href="#">Gerenciar notificações</a><br><br>
+<strong>SUA MARCA</strong> — Equipamentos Hospitalares<br>
+(00) 0000-0000 · suamarca.com.br</p>
+</div>
+</div>
+</div>
+
+<!-- ===== EMAIL 2: GARANTIA VENCENDO ===== -->
+<div class="email-container" id="email-garantia">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>SUA MARCA</strong> via Smart Care</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">dr.ricardo@hospital.com.br</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>🛡️ Garantia vencendo em 30 dias — 3 equipamentos</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(239,68,68,.15);color:#dc2626">🛡️ 90, 60 e 30 dias</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar red"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Powered by <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<span class="email-icon-big">🛡️</span>
+<div class="email-title">Garantia Vencendo em 30 Dias</div>
+<div class="email-subtitle">3 equipamentos perderão a cobertura de garantia em breve</div>
+
+<div class="email-p">Olá, <strong>Dr. Ricardo</strong>,</div>
+<div class="email-p">Identificamos que <strong>3 equipamentos</strong> do <strong>Hospital Regional do Vale</strong> terão suas garantias encerradas nos próximos 30 dias:</div>
+
+<div class="email-alert red">
+<span class="email-alert-icon">⚠️</span>
+<div class="email-alert-text"><strong>Atenção: após o vencimento, reparos e peças serão cobrados integralmente.</strong>A renovação ou extensão da garantia pode ser feita com condições especiais até a data de vencimento.</div>
+</div>
+
+<table class="email-table">
+<thead><tr><th>Equipamento</th><th>Vencimento</th><th>Dias Restantes</th></tr></thead>
+<tbody>
+<tr><td><strong>Cama Elétrica Total Fiber</strong><br><span style="font-size:11px;color:#94a3b8">CE-TFP-2025-0088</span></td><td>14/03/2026</td><td><span style="color:#dc2626;font-weight:700">28 dias</span></td></tr>
+<tr><td><strong>Cama Elétrica Total Fiber</strong><br><span style="font-size:11px;color:#94a3b8">CE-TFP-2025-0089</span></td><td>14/03/2026</td><td><span style="color:#dc2626;font-weight:700">28 dias</span></td></tr>
+<tr><td><strong>Foco Cirúrgico LED</strong><br><span style="font-size:11px;color:#94a3b8">FC-LED-2025-0143</span></td><td>20/03/2026</td><td><span style="color:#d97706;font-weight:700">34 dias</span></td></tr>
+</tbody>
+</table>
+
+<div class="email-card">
+<div class="email-card-title">💰 Opções de renovação</div>
+<div class="email-card-row"><span class="label">Garantia Estendida (12 meses)</span><span class="value" style="color:#059669">R$ 1.800/equip.</span></div>
+<div class="email-card-row"><span class="label">Garantia Premium (12 meses + manutenção)</span><span class="value" style="color:#059669">R$ 2.400/equip.</span></div>
+<div class="email-card-row"><span class="label">Contrato de Manutenção Anual</span><span class="value" style="color:#059669">R$ 3.600/equip.</span></div>
+<div class="email-card-row"><span class="label">🎁 Desconto renovação antecipada</span><span class="value" style="color:#059669;font-weight:700">-15% até vencimento</span></div>
+</div>
+
+<a class="email-cta red" href="#">🛡️ Renovar Garantia com Desconto</a>
+
+<div class="email-p" style="font-size:12px;color:#94a3b8">Para dúvidas ou negociação, entre em contato com nosso comercial pelo (00) 0000-0000 ou responda este e-mail.</div>
+</div>
+<div class="email-footer">
+<p>E-mail automático — Smart Care<br><a href="#">Portal</a> · <a href="#">Notificações</a><br><br><strong>SUA MARCA</strong><br>(00) 0000-0000</p>
+</div>
+</div>
+</div>
+
+<!-- ===== EMAIL 3: BOAS-VINDAS ===== -->
+<div class="email-container" id="email-boas-vindas">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>SUA MARCA</strong> via Smart Care</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">engclinico@hospital.com.br</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>👋 Bem-vindo ao Smart Care — Seu equipamento foi ativado!</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(16,185,129,.15);color:#059669">✅ Após instalação</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar green"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Powered by <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<span class="email-icon-big">🎉</span>
+<div class="email-title">Bem-vindo ao Smart Care!</div>
+<div class="email-subtitle">Seu equipamento foi instalado e ativado com sucesso</div>
+
+<div class="email-p">Olá, <strong>Dr. Ricardo</strong>,</div>
+<div class="email-p">O equipamento abaixo foi instalado e registrado no sistema Smart Care. A partir de agora, sua equipe pode acessar todas as funcionalidades escaneando o QR Code colado no equipamento:</div>
+
+<div class="email-card">
+<div class="email-card-title">✅ Equipamento Ativado</div>
+<div class="email-card-row"><span class="label">Equipamento</span><span class="value">Foco Cirúrgico LED 02 Cúpulas</span></div>
+<div class="email-card-row"><span class="label">Nº Série</span><span class="value" style="font-family:'Space Mono',monospace;font-size:12px">FC-LED-2026-0198</span></div>
+<div class="email-card-row"><span class="label">Local</span><span class="value">CC — Sala 05</span></div>
+<div class="email-card-row"><span class="label">Garantia</span><span class="value" style="color:#059669">12 meses (até 14/02/2027)</span></div>
+<div class="email-card-row"><span class="label">Técnico</span><span class="value">André Santos</span></div>
+</div>
+
+<div class="email-alert green">
+<span class="email-alert-icon">📱</span>
+<div class="email-alert-text"><strong>O que sua equipe pode fazer ao escanear o QR Code:</strong>✅ Acessar vídeos de treinamento do equipamento<br>✅ Abrir chamado de manutenção em 1 clique<br>✅ Preencher checklist de turno (compliance ANVISA)<br>✅ Ver histórico completo do equipamento</div>
+</div>
+
+<a class="email-cta green" href="#">🏥 Acessar o Portal do Hospital</a>
+
+<div class="email-p" style="font-size:12px;color:#94a3b8">Dica: oriente a equipe de enfermagem a escanear o QR Code sempre que tiver dúvida ou identificar algum problema no equipamento. O suporte é instantâneo.</div>
+</div>
+<div class="email-footer">
+<p>E-mail automático — Smart Care<br><a href="#">Portal</a> · <a href="#">Notificações</a><br><br><strong>SUA MARCA</strong><br>(00) 0000-0000</p>
+</div>
+</div>
+</div>
+
+<!-- ===== EMAIL 4: NPS ===== -->
+<div class="email-container" id="email-nps">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>SUA MARCA</strong> via Smart Care</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">dr.ricardo@hospital.com.br</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>⭐ Como foi nosso atendimento? (1 clique para responder)</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(139,92,246,.15);color:#7c3aed">⭐ Pós-chamado resolvido</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar purple"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Powered by <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<span class="email-icon-big">⭐</span>
+<div class="email-title">Como foi nosso atendimento?</div>
+<div class="email-subtitle">Sua opinião nos ajuda a melhorar cada vez mais</div>
+
+<div class="email-p">Olá, <strong>Dr. Ricardo</strong>,</div>
+<div class="email-p">O chamado <strong>CH-2026-046</strong> referente ao <strong>Foco Cirúrgico LED</strong> (CC — Sala 03) foi resolvido em <strong>2.5 horas</strong>. Gostaríamos de saber como foi sua experiência:</div>
+
+<div class="email-p" style="text-align:center;font-weight:700;color:#0f172a">De 0 a 10, o quanto você recomendaria nosso serviço?</div>
+
+<div class="nps-row">
+<div class="nps-num red">0</div><div class="nps-num red">1</div><div class="nps-num red">2</div><div class="nps-num red">3</div><div class="nps-num red">4</div><div class="nps-num red">5</div><div class="nps-num amber">6</div><div class="nps-num amber">7</div><div class="nps-num amber">8</div><div class="nps-num green">9</div><div class="nps-num green">10</div>
+</div>
+
+<div class="email-p" style="font-size:12px;color:#94a3b8;text-align:center">Clique no número para registrar sua avaliação. Leva apenas 1 segundo.</div>
+</div>
+<div class="email-footer">
+<p>E-mail automático — Smart Care<br><a href="#">Portal</a> · <a href="#">Notificações</a><br><br><strong>SUA MARCA</strong><br>(00) 0000-0000</p>
+</div>
+</div>
+</div>
+
+<!-- ===== EMAIL 5: RELATÓRIO SEMANAL ===== -->
+<div class="email-container" id="email-semanal">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>Smart Care</strong> — Relatório Automático</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">gerente@suamarca.com.br (Equipe Comercial)</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>📊 Resumo Semanal — 10 a 14 de Fevereiro 2026</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(59,130,246,.15);color:#2563eb">📊 Segunda 08:00</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar blue"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Relatório Semanal — <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<div class="email-title">📊 Resumo da Semana</div>
+<div class="email-subtitle">10 a 14 de Fevereiro 2026</div>
+
+<div class="weekly-kpi">
+<div class="weekly-kpi-item"><div class="weekly-kpi-value">47</div><div class="weekly-kpi-label">Hospitais ativos</div></div>
+<div class="weekly-kpi-item"><div class="weekly-kpi-value">842</div><div class="weekly-kpi-label">Equipamentos</div></div>
+<div class="weekly-kpi-item"><div class="weekly-kpi-value" style="color:#06b6d4">1.247</div><div class="weekly-kpi-label">QR Scans</div></div>
+</div>
+
+<div class="email-alert amber">
+<span class="email-alert-icon">⚠️</span>
+<div class="email-alert-text"><strong>Ações necessárias esta semana:</strong>• 3 garantias vencendo nos próximos 30 dias (R$ 15k em risco)<br>• 2 manutenções atrasadas (Hosp. Monte Sinai)<br>• 1 oportunidade de recompra identificada (R$ 85k)</div>
+</div>
+
+<table class="email-table">
+<thead><tr><th>Métrica</th><th>Semana</th><th>vs. Anterior</th></tr></thead>
+<tbody>
+<tr><td>Chamados abertos</td><td><strong>5</strong></td><td style="color:#059669">↓ -2</td></tr>
+<tr><td>Chamados resolvidos</td><td><strong>7</strong></td><td style="color:#059669">↑ +3</td></tr>
+<tr><td>Tempo médio resolução</td><td><strong>3.8h</strong></td><td style="color:#059669">↓ -0.5h</td></tr>
+<tr><td>Checklists preenchidos</td><td><strong>287</strong></td><td style="color:#059669">↑ +12</td></tr>
+<tr><td>NPS médio</td><td><strong>8.4</strong></td><td style="color:#059669">↑ +0.2</td></tr>
+<tr><td>Receita pós-venda</td><td><strong>R$ 11.950</strong></td><td style="color:#059669">↑ +18%</td></tr>
+</tbody>
+</table>
+
+<a class="email-cta blue" href="#">📊 Ver Dashboard Completo</a>
+</div>
+<div class="email-footer">
+<p>Relatório automático — Smart Care<br><a href="#">Dashboard</a> · <a href="#">Configurar relatório</a><br><br><strong>SUA MARCA</strong></p>
+</div>
+</div>
+</div>
+
+<!-- ===== EMAIL 6: MANUTENÇÃO ATRASADA ===== -->
+<div class="email-container" id="email-atrasado">
+<div class="email-meta">
+<div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-value"><strong>SUA MARCA</strong> via Smart Care — URGENTE</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-value">dr.marcos@hospital.com.br + gerente@suamarca.com.br</span></div>
+<div class="email-meta-row"><span class="email-meta-label">Assunto:</span><span class="email-meta-value"><strong>🚨 ATRASADO: Manutenção preventiva vencida há 13 dias</strong></span></div>
+<div class="email-meta-row"><span class="email-meta-label">Disparo:</span><span class="email-meta-value">Automático <span class="email-meta-trigger" style="background:rgba(239,68,68,.15);color:#dc2626">🚨 Quando atrasada</span></span></div>
+</div>
+<div class="email-preview">
+<div class="email-top-bar red"></div>
+<div class="email-header">
+<div class="email-logo"><div class="email-logo-icon">⚕️</div><span class="email-logo-brand">Smart Care</span></div>
+<div class="email-mfg">Powered by <strong>SUA MARCA</strong></div>
+</div>
+<div class="email-content">
+<span class="email-icon-big">🚨</span>
+<div class="email-title">Manutenção Atrasada</div>
+<div class="email-subtitle">Equipamento com revisão preventiva vencida</div>
+
+<div class="email-alert red">
+<span class="email-alert-icon">⚠️</span>
+<div class="email-alert-text"><strong>Manutenção preventiva atrasada em 13 dias.</strong>Equipamentos com manutenção vencida podem apresentar falhas, comprometer a segurança do paciente e afetar a conformidade com normas ANVISA/ONA. A garantia pode ser invalidada.</div>
+</div>
+
+<div class="email-card">
+<div class="email-card-title" style="color:#dc2626">🚨 Equipamento com manutenção atrasada</div>
+<div class="email-card-row"><span class="label">Equipamento</span><span class="value">Maca Hidráulica MH-200</span></div>
+<div class="email-card-row"><span class="label">Nº Série</span><span class="value" style="font-family:'Space Mono',monospace;font-size:12px">MH-200-2024-0078</span></div>
+<div class="email-card-row"><span class="label">Local</span><span class="value">PS — Box 02</span></div>
+<div class="email-card-row"><span class="label">Data prevista</span><span class="value" style="color:#dc2626">01/02/2026</span></div>
+<div class="email-card-row"><span class="label">Dias atrasados</span><span class="value" style="color:#dc2626;font-weight:700;font-size:16px">13 dias</span></div>
+</div>
+
+<a class="email-cta red" href="#">📞 Agendar Manutenção Urgente</a>
+
+<div class="email-p" style="font-size:12px;color:#94a3b8">Este e-mail foi enviado automaticamente para o hospital e para a equipe comercial do fabricante. O registro de atraso fica documentado no histórico do equipamento.</div>
+</div>
+<div class="email-footer">
+<p>Alerta automático — Smart Care<br><a href="#">Portal</a> · <a href="#">Notificações</a><br><br><strong>SUA MARCA</strong><br>(00) 0000-0000</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<script>
+function showEmail(id){
+  document.querySelectorAll('.email-container').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.email-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('email-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
